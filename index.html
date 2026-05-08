@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
@@ -26,18 +26,6 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothi
 
 /* ===== DESIGN TOKENS ===== */
 :root{
-  --bg:#0f1723;--card:#1a2332;--card2:#212c3e;
-  --line:#2a3650;--line2:#384660;
-  --text:#e8eef7;--mute:#7a8aa3;--mute2:#9aa8c0;
-  --blue:#3b82f6;--blue-bg:rgba(59,130,246,.12);--blue-bd:rgba(59,130,246,.35);
-  --green:#22c55e;--green-bg:#0f2a1c;--green-bd:#1e4a30;
-  --amber:#f59e0b;--amber-bg:#2a1f0a;--amber-bd:#4a3414;
-  --red:#ef4444;--red-bg:#2a1010;--red-bd:#4a1c1c;
-  --accent:#3b82f6;
-  --fixed-header-h:160px;
-  --fixed-footer-h:70px;
-}
-html.light{
   --bg:#f5f7fb;--card:#ffffff;--card2:#eef2f8;
   --line:#dde3ee;--line2:#c8d1de;
   --text:#0f1723;--mute:#6b7689;--mute2:#4a5568;
@@ -45,9 +33,9 @@ html.light{
   --green:#16a34a;--green-bg:#e6f4ec;--green-bd:#bfe3cd;
   --amber:#d97706;--amber-bg:#fbf0dd;--amber-bd:#eccfa3;
   --red:#dc2626;--red-bg:#fbe7e7;--red-bd:#eebfbf;
+  --fixed-header-h:160px;--fixed-footer-h:70px;
 }
-
-html.dark {
+html.dark{
   --bg:#0f1723;--card:#1a2332;--card2:#212c3e;
   --line:#2a3650;--line2:#384660;
   --text:#e8eef7;--mute:#7a8aa3;--mute2:#9aa8c0;
@@ -391,6 +379,42 @@ body.no-tab .app-sections{display:none;}
 .mb-3{margin-bottom:.75rem;}
 .mb-4{margin-bottom:1rem;}
 .mb-5{margin-bottom:0;}
+
+
+/* ===== SOUTE STEPPERS (LOAD FINAL) ===== */
+.soute-stepper{
+  background:var(--card2);border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px;
+}
+.soute-stepper.danger{background:var(--red-bg);border-color:var(--red-bd);}
+.soute-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.soute-name{font-size:14px;font-weight:700;}
+.soute-name.danger{color:var(--red);}
+.soute-limit{font-size:11px;color:var(--mute);font-weight:500;}
+.soute-limit.danger{color:var(--red);}
+.soute-ctrl{display:grid;grid-template-columns:44px 1fr 44px;height:42px;border-radius:8px;overflow:hidden;border:1px solid var(--line);}
+.soute-stepper.danger .soute-ctrl{border-color:var(--red-bd);}
+.soute-ctrl-btn{background:var(--bg);border:none;cursor:pointer;color:var(--mute2);font-size:18px;font-weight:600;font-family:inherit;}
+.soute-ctrl-val{background:var(--card);display:flex;align-items:center;justify-content:center;gap:5px;font-size:18px;font-weight:600;}
+.soute-ctrl-val.danger{background:var(--red-bg);color:var(--red);}
+.soute-ctrl-unit{font-size:11px;color:var(--mute);font-weight:500;}
+.soute-bar-track{height:4px;border-radius:2px;background:var(--line);margin-top:8px;overflow:hidden;}
+.soute-bar-fill{height:100%;border-radius:2px;background:var(--blue);transition:width .2s;}
+.soute-bar-fill.danger{background:var(--red);}
+.ldm-num-field{
+  height:42px;border-radius:8px;padding:0 10px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--card);border:1px solid var(--line);
+  font-size:17px;font-weight:600;
+}
+.ldm-num-field input{
+  background:transparent;border:none;color:var(--text);
+  font-size:17px;font-weight:600;text-align:center;width:100%;
+  font-family:inherit;
+}
+.ldm-num-field input:focus{outline:none;}
+.ldm-num-field.readonly{background:var(--bg);color:var(--mute2);}
+.ldm-num-unit{font-size:10px;color:var(--mute);font-weight:500;flex-shrink:0;}
 
 /* ===== LDM MODAL (keep Bulma-compatible) ===== */
 #ldmBackdrop{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.55);display:none;}
@@ -846,36 +870,26 @@ body.ak-open #akPopover{display:flex;}
           </div>
         </div>
 
-        <div class="ldm-row-4" id="hBagsRow">
-          <div class="field">
-            <label class="label">H1</label>
-            <input class="input ldm-in" id="FinalH1"
-                   type="text" inputmode="numeric" pattern="[0-9]*"
-                   maxlength="4" oninput="digitsOnly(this); updateHBagsValidity('final'); updateHWeights(); updateCommChargementPiste()">
-            <div id="FinalH1w" class="has-text-centered" style="font-size:.72rem;font-weight:900;color:var(--muted);margin-top:3px;display:none;"></div>
+        <div id="hBagsRow" style="display:none;">
+            <input id="FinalH1" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" oninput="digitsOnly(this); updateHBagsValidity('final'); updateHWeights(); updateCommChargementPiste(); renderSouteSteppers()">
+            <div id="FinalH1w" style="display:none;"></div>
+            <input id="FinalH2" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" oninput="digitsOnly(this); updateHBagsValidity('final'); updateHWeights(); updateCommChargementPiste(); renderSouteSteppers()">
+            <div id="FinalH2w" style="display:none;"></div>
+            <input id="FinalH3" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" oninput="digitsOnly(this); updateHBagsValidity('final'); updateHWeights(); updateCommChargementPiste(); renderSouteSteppers()">
+            <div id="FinalH3w" style="display:none;"></div>
+            <input id="FinalH4" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" oninput="digitsOnly(this); updateHBagsValidity('final'); updateHWeights(); updateCommChargementPiste(); renderSouteSteppers()">
+            <div id="FinalH4w" style="display:none;"></div>
           </div>
-          <div class="field">
-            <label class="label">H2</label>
-            <input class="input ldm-in" id="FinalH2"
-                   type="text" inputmode="numeric" pattern="[0-9]*"
-                   maxlength="4" oninput="digitsOnly(this); updateHBagsValidity('final'); updateHWeights(); updateCommChargementPiste()">
-            <div id="FinalH2w" class="has-text-centered" style="font-size:.72rem;font-weight:900;color:var(--muted);margin-top:3px;display:none;"></div>
+          <!-- Soute steppers visual -->
+          <div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--mute);margin-bottom:8px;margin-top:4px;">BAGAGES PAR SOUTE</div>
+          <div id="souteSteppers" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px;font-size:11px;color:var(--mute2);">
+            <span>Total :</span>
+            <span class="num" id="souteTotalBags" style="font-weight:700;color:var(--text);">0 bags</span>
+            <span>·</span>
+            <span class="num" id="souteTotalKg" style="color:var(--mute);">0 kg</span>
+            <span id="souteWarning" style="color:var(--red);display:none;">⚠ Limite dépassée</span>
           </div>
-          <div class="field">
-            <label class="label">H3</label>
-            <input class="input ldm-in" id="FinalH3"
-                   type="text" inputmode="numeric" pattern="[0-9]*"
-                   maxlength="4" oninput="digitsOnly(this); updateHBagsValidity('final'); updateHWeights(); updateCommChargementPiste()">
-            <div id="FinalH3w" class="has-text-centered" style="font-size:.72rem;font-weight:900;color:var(--muted);margin-top:3px;display:none;"></div>
-          </div>
-          <div class="field">
-            <label class="label">H4</label>
-            <input class="input ldm-in" id="FinalH4"
-                   type="text" inputmode="numeric" pattern="[0-9]*"
-                   maxlength="4" oninput="digitsOnly(this); updateHBagsValidity('final'); updateHWeights(); updateCommChargementPiste()">
-            <div id="FinalH4w" class="has-text-centered" style="font-size:.72rem;font-weight:900;color:var(--muted);margin-top:3px;display:none;"></div>
-          </div>
-        </div>
 
         <div class="field ldm-span-2">
           <label class="label">SI</label>
@@ -1215,6 +1229,27 @@ body.ak-open #akPopover{display:flex;}
     </div>
   </div>
 
+
+  <!-- SAISIE RAPIDE -->
+  <div class="quick-edit-card" style="margin-bottom:12px;">
+    <div class="quick-edit-hdr">
+      <div class="qe-title">SAISIE RAPIDE</div>
+      <div class="qe-seg">
+        <button class="qe-seg-btn active" id="qeAibt" onclick="qeSwitch('AIBT')">AIBT</button>
+        <button class="qe-seg-btn" id="qeAobt" onclick="qeSwitch('AOBT')">AOBT</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.6fr 1fr;height:56px;border-radius:10px;overflow:hidden;border:1px solid var(--line);margin-bottom:8px;">
+      <button style="background:var(--card2);border:none;cursor:pointer;color:var(--mute2);font-size:14px;font-weight:700;font-family:inherit;border-right:1px solid var(--line);" onclick="qeAdjust(-1)">−1′</button>
+      <div class="num" id="qeVal" style="background:var(--card);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600;letter-spacing:-.01em;color:var(--text);cursor:pointer;" onclick="qeNow()">--:--</div>
+      <button style="background:var(--card2);border:none;cursor:pointer;color:var(--mute2);font-size:14px;font-weight:700;font-family:inherit;border-left:1px solid var(--line);" onclick="qeAdjust(+1)">+1′</button>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button style="flex:1;height:36px;border-radius:8px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;" onclick="qeNow()">NOW</button>
+      <button style="flex:1;height:36px;border-radius:8px;border:1px solid var(--green-bd);background:var(--green-bg);color:var(--green);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;" onclick="qeValidate()">✓ Valider</button>
+    </div>
+  </div>
+
   <!-- Action buttons (validate, clear, reset) -->
   <div class="action-bar" style="margin-top:12px;">
     <button class="button action-btn action-btn--validate" id="validate" onclick="validateForm()">
@@ -1239,7 +1274,17 @@ body.ak-open #akPopover{display:flex;}
 
 
 <div id="s-timers" class="app-section" style="display:none;">
-  <div id="timing-grid"></div>
+
+  <!-- Hidden timing-grid: JS creates inputs here for data persistence -->
+  <div id="timing-grid" style="display:none;"></div>
+
+  <!-- START/FINISH visual UI (rendered by renderSFTimers) -->
+  <div id="sfContainer">
+    <div id="sfPlaceholder" style="text-align:center;padding:48px 0;color:var(--mute);font-size:13px;">
+      Renseigner l'AIBT pour démarrer le suivi
+    </div>
+  </div>
+
 </div>
 
 
@@ -3192,6 +3237,8 @@ function initForm(){
   });
   if(typeof twSyncAll === "function") setTimeout(twSyncAll, 50);
   setTimeout(applyAircraftConfig, 80);
+  setTimeout(renderSFTimers, 100);
+  setTimeout(qeUpdateDisplay, 100);
 }
 
 function updateInfoStrip(){
@@ -6353,6 +6400,8 @@ function switchSection(id) {
     const ldm = document.getElementById('ldmModal');
     if (ldm && ldm.style.display !== 'none') closeLDM();
   }
+  if (id === 'timers') { setTimeout(renderSFTimers, 50); }
+  if (id === 'vol') { setTimeout(qeUpdateDisplay, 50); }
   if (id === 'notes') {
     setTimeout(() => {
       const c = document.getElementById('bnCanvas');
@@ -6397,6 +6446,313 @@ function toggleRetard() {
   if (ch) ch.style.transform = open ? 'rotate(180deg)' : '';
   if (hdr) hdr.classList.toggle('open', open);
 }
+
+
+
+/* ===== SOUTE STEPPERS ===== */
+const SOUTE_DEFS = [
+  { id: 'FinalH1', label: 'H1 — AVANT', kgPer: 13 },
+  { id: 'FinalH2', label: 'H2 — AVANT', kgPer: 13 },
+  { id: 'FinalH3', label: 'H3 — ARR.',  kgPer: 13 },
+  { id: 'FinalH4', label: 'H4 — ARR.',  kgPer: 13 },
+];
+
+function souteGetMax(id) {
+  const el = document.getElementById(id);
+  if (!el) return 999;
+  const ph = el.placeholder || '';
+  const m = ph.match(/^(\d+)/);
+  return m ? parseInt(m[1]) : 999;
+}
+
+function souteGetBags(id) {
+  const el = document.getElementById(id);
+  if (!el || !el.value) return 0;
+  return parseInt(el.value) || 0;
+}
+
+function souteSet(id, val) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.value = val <= 0 ? '' : String(val);
+  el.dispatchEvent(new InputEvent('input', { bubbles: true }));
+}
+
+function souteBump(id, delta) {
+  const cur = souteGetBags(id);
+  souteSet(id, Math.max(0, cur + delta));
+}
+
+function renderSouteSteppers() {
+  const container = document.getElementById('souteSteppers');
+  if (!container) return;
+  let totalBags = 0, totalKg = 0, hasWarning = false;
+  let html = '';
+  SOUTE_DEFS.forEach(def => {
+    const bags = souteGetBags(def.id);
+    const maxEl = document.getElementById(def.id);
+    const ph = maxEl ? maxEl.placeholder : '';
+    const maxMatch = ph.match(/(\d+)\s*kg/i);
+    const maxKg = maxMatch ? parseInt(maxMatch[1]) : 9999;
+    const kg = bags * def.kgPer;
+    const pct = Math.min(100, maxKg > 0 ? (kg / maxKg) * 100 : 0);
+    const isDanger = maxKg < 9999 && kg > maxKg;
+    if (isDanger) hasWarning = true;
+    totalBags += bags; totalKg += kg;
+    html += `<div class="soute-stepper${isDanger ? ' danger' : ''}">
+      <div class="soute-hdr">
+        <div class="soute-name${isDanger ? ' danger' : ''}">${def.label}</div>
+        <div class="soute-limit${isDanger ? ' danger' : ''} num">${kg}<span style="opacity:.6">/${maxKg} kg</span></div>
+      </div>
+      <div class="soute-ctrl">
+        <button class="soute-ctrl-btn" onclick="souteBump('${def.id}',-1)">−</button>
+        <div class="soute-ctrl-val${isDanger ? ' danger' : ''} num">
+          ${bags}<span class="soute-ctrl-unit">bag</span>
+        </div>
+        <button class="soute-ctrl-btn" onclick="souteBump('${def.id}',+1)">+</button>
+      </div>
+      <div class="soute-bar-track">
+        <div class="soute-bar-fill${isDanger ? ' danger' : ''}" style="width:${pct}%"></div>
+      </div>
+    </div>`;
+  });
+  container.innerHTML = html;
+  const totalBagsEl = document.getElementById('souteTotalBags');
+  const totalKgEl   = document.getElementById('souteTotalKg');
+  const warnEl      = document.getElementById('souteWarning');
+  if (totalBagsEl) totalBagsEl.textContent = totalBags + ' bags';
+  if (totalKgEl)   totalKgEl.textContent   = totalKg + ' kg';
+  if (warnEl)      warnEl.style.display    = hasWarning ? '' : 'none';
+}
+
+/* ===== QUICK EDIT (SAISIE RAPIDE) ===== */
+let _qeField = 'AIBT';
+function qeSwitch(field) {
+  _qeField = field;
+  document.getElementById('qeAibt').classList.toggle('active', field === 'AIBT');
+  document.getElementById('qeAobt').classList.toggle('active', field === 'AOBT');
+  qeUpdateDisplay();
+}
+function qeUpdateDisplay() {
+  const input = document.getElementById(_qeField);
+  const val = (input && input.value) ? input.value : '--:--';
+  const el = document.getElementById('qeVal');
+  if (el) el.textContent = val;
+}
+function qeNow() {
+  const n = new Date();
+  const v = String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
+  const input = document.getElementById(_qeField);
+  if (!input) return;
+  input.value = v;
+  input.dispatchEvent(new Event('change', { bubbles: true }));
+  if (typeof twSync === 'function') twSync(_qeField);
+  qeUpdateDisplay();
+}
+function qeAdjust(delta) {
+  const input = document.getElementById(_qeField);
+  if (!input) return;
+  if (!input.value) { qeNow(); return; }
+  const [h, m] = input.value.split(':').map(Number);
+  const tot = h * 60 + m + delta;
+  const nh = ((Math.floor(tot / 60)) % 24 + 24) % 24;
+  const nm = ((tot % 60) + 60) % 60;
+  input.value = String(nh).padStart(2,'0') + ':' + String(nm).padStart(2,'0');
+  input.dispatchEvent(new Event('change', { bubbles: true }));
+  if (typeof twSync === 'function') twSync(_qeField);
+  qeUpdateDisplay();
+}
+function qeValidate() {
+  if (typeof updateAllCalculations === 'function') updateAllCalculations();
+  qeUpdateDisplay();
+}
+
+/* ===== START / FINISH TIMERS ===== */
+const SF_ACTIONS = [
+  {
+    group: 'ARR', label: 'Lift ARR', sub: 'START = arrivée du lift · FINISH = départ du lift',
+    startId: 'ArriveeLiftArr', endId: 'DepartLiftArr'
+  },
+  {
+    group: 'ARR', label: 'Débarquement', sub: 'Premier → dernier PAX',
+    startId: 'PremierDebarque', endId: 'DernierDebarque'
+  },
+  {
+    group: 'ARR', label: 'Avitaillement', sub: 'Fuel arrivée',
+    startId: 'ArriveeFuel', endId: 'DepartFuel'
+  },
+  {
+    group: 'ARR', label: 'PNT / PNC', sub: 'Équipage',
+    startId: 'ArrPNT', endId: 'ArrPNC'
+  },
+  {
+    group: 'DEP', label: 'Lift DEP', sub: 'START = arrivée du lift · FINISH = départ du lift',
+    startId: 'ArriveeLift', endId: 'DepartLift'
+  },
+  {
+    group: 'DEP', label: 'Embarquement', sub: 'Premier → dernier PAX',
+    startId: 'AvionPremierEmbarque', endId: 'AvionDernierEmbarque'
+  },
+  {
+    group: 'DEP', label: 'Remise LID', sub: 'Loadsheet final',
+    startId: 'RemiseLID', endId: 'RemiseLID'
+  },
+  {
+    group: 'DEP', label: 'Fermeture porte', sub: 'Avant push back',
+    startId: 'FermeturePorteAvion', endId: 'FermeturePorteAvion'
+  },
+];
+
+function sfGetTime(fieldId) {
+  const el = document.getElementById(fieldId);
+  return (el && el.value) ? el.value : null;
+}
+
+function sfSetTime(fieldId, value) {
+  const el = document.getElementById(fieldId);
+  if (!el) return;
+  el.value = value;
+  el.dispatchEvent(new Event('change', { bubbles: true }));
+  if (typeof twSync === 'function') twSync(fieldId);
+}
+
+function sfNow() {
+  const n = new Date();
+  return String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
+}
+
+function sfTap(fieldId) {
+  if (!sfGetTime(fieldId)) {
+    sfSetTime(fieldId, sfNow());
+  }
+  renderSFTimers();
+  if (typeof updateAllCalculations === 'function') updateAllCalculations();
+}
+
+function sfAdj(fieldId, delta) {
+  const cur = sfGetTime(fieldId);
+  if (!cur) { sfTap(fieldId); return; }
+  const [h, m] = cur.split(':').map(Number);
+  const tot = h * 60 + m + delta;
+  const nh = ((Math.floor(tot / 60)) % 24 + 24) % 24;
+  const nm = ((tot % 60) + 60) % 60;
+  sfSetTime(fieldId, String(nh).padStart(2,'0') + ':' + String(nm).padStart(2,'0'));
+  renderSFTimers();
+  if (typeof updateAllCalculations === 'function') updateAllCalculations();
+}
+
+function sfDuration(startId, endId) {
+  const s = sfGetTime(startId), e = sfGetTime(endId);
+  if (!s || !e) return null;
+  const sm = parseInt(s.split(':')[0])*60 + parseInt(s.split(':')[1]);
+  const em = parseInt(e.split(':')[0])*60 + parseInt(e.split(':')[1]);
+  const d = em - sm;
+  return d >= 0 ? d : null;
+}
+
+function sfBtn(fieldId, kind, isDone, isActive) {
+  const time = sfGetTime(fieldId);
+  const isSingle = kind === 'SINGLE';
+  const label = isSingle ? '⏺' : kind;
+
+  if (isDone || (isActive && kind === 'START')) {
+    const fg = isDone ? 'var(--green)' : '#fff';
+    const bg = isDone ? 'var(--green-bg)' : 'var(--blue)';
+    const bd = isDone ? 'var(--green-bd)' : 'var(--blue)';
+    return `<div style="flex:1;height:54px;border-radius:10px;overflow:hidden;background:${bg};border:1px solid ${bd};display:grid;grid-template-columns:34px 1fr 34px;">
+      <button onclick="sfAdj('${fieldId}',-1)" style="background:rgba(0,0,0,.18);border:none;cursor:pointer;color:${fg};font-size:13px;font-weight:700;font-family:inherit;">−1</button>
+      <button onclick="sfTap('${fieldId}')" style="background:transparent;border:none;cursor:pointer;color:${fg};display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:inherit;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.1em;">${label}${isDone?' ✓':''}</div>
+        <div style="font-size:17px;font-weight:600;" class="num">${time || '--:--'}</div>
+      </button>
+      <button onclick="sfAdj('${fieldId}',+1)" style="background:rgba(0,0,0,.18);border:none;cursor:pointer;color:${fg};font-size:13px;font-weight:700;font-family:inherit;">+1</button>
+    </div>`;
+  }
+  if (isActive) {
+    // FINISH active (running)
+    return `<div style="flex:1;height:54px;border-radius:10px;overflow:hidden;background:var(--blue);border:1px solid var(--blue);display:grid;grid-template-columns:34px 1fr 34px;">
+      <button onclick="sfAdj('${fieldId}',-1)" style="background:rgba(0,0,0,.18);border:none;cursor:pointer;color:#fff;font-size:13px;font-weight:700;font-family:inherit;">−1</button>
+      <button onclick="sfTap('${fieldId}')" style="background:transparent;border:none;cursor:pointer;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:inherit;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.1em;">${label}</div>
+        <div style="font-size:13px;font-weight:500;opacity:.8;">tap = NOW</div>
+      </button>
+      <button onclick="sfAdj('${fieldId}',+1)" style="background:rgba(0,0,0,.18);border:none;cursor:pointer;color:#fff;font-size:13px;font-weight:700;font-family:inherit;">+1</button>
+    </div>`;
+  }
+  // idle
+  return `<button onclick="sfTap('${fieldId}')" style="flex:1;height:54px;border-radius:10px;cursor:pointer;background:var(--card2);border:1.5px dashed var(--line2);color:var(--mute2);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:inherit;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.1em;">${label}</div>
+    <div style="font-size:13px;font-weight:500;margin-top:2px;">tap = NOW</div>
+  </button>`;
+}
+
+function renderSFTimers() {
+  const container = document.getElementById('sfContainer');
+  if (!container) return;
+
+  const groups = ['ARR', 'DEP'];
+  let html = '';
+
+  groups.forEach(group => {
+    const actions = SF_ACTIONS.filter(a => a.group === group);
+    const done = actions.filter(a => sfGetTime(a.startId) && sfGetTime(a.endId)).length;
+    const total = actions.length;
+    const groupColor = group === 'ARR' ? 'var(--green)' : 'var(--amber)';
+
+    html += `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 4px 8px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="width:8px;height:8px;border-radius:50%;background:${groupColor};display:inline-block;"></span>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--mute);">${group === 'ARR' ? 'ARRIVÉE' : 'DÉPART'}</div>
+      </div>
+      <div style="font-size:11px;color:var(--mute2);" class="num">${done} / ${total} actions</div>
+    </div>`;
+
+    actions.forEach(action => {
+      const sTime = sfGetTime(action.startId);
+      const eTime = sfGetTime(action.endId);
+      const isSingle = action.startId === action.endId;
+      const startDone = !!sTime;
+      const endDone = !!eTime;
+      const running = startDone && !endDone && !isSingle;
+      const allDone = isSingle ? startDone : (startDone && endDone);
+      const dur = isSingle ? null : sfDuration(action.startId, action.endId);
+
+      let statusHtml = '';
+      if (allDone && dur !== null) {
+        statusHtml = `<div style="font-size:12px;color:var(--green);font-weight:600;" class="num">durée ${dur}′</div>`;
+      } else if (running) {
+        statusHtml = `<div style="display:flex;align-items:center;gap:4px;color:var(--blue);font-size:11px;font-weight:600;"><span style="width:6px;height:6px;border-radius:50%;background:var(--blue);display:inline-block;"></span>EN COURS</div>`;
+      }
+
+      html += `<div style="background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px;">
+          <div>
+            <div style="font-size:14px;font-weight:600;">${action.label}</div>
+            <div style="font-size:11px;color:var(--mute);margin-top:1px;">${action.sub}</div>
+          </div>
+          ${statusHtml}
+        </div>
+        <div style="display:flex;gap:8px;">
+          ${isSingle
+            ? sfBtn(action.startId, 'SINGLE', startDone, false)
+            : sfBtn(action.startId, 'START', startDone, false) + sfBtn(action.endId, 'FINISH', endDone, running)
+          }
+        </div>
+      </div>`;
+    });
+  });
+
+  container.innerHTML = html;
+  document.getElementById('sfPlaceholder') && (document.getElementById('sfPlaceholder').style.display = 'none');
+}
+
+// Re-render timers when section is activated
+const _origSwitchSection = switchSection;
+// Override handled below by calling renderSFTimers in switchSection
+
+/* ===== AUTO-UPDATE QE DISPLAY ===== */
+setInterval(qeUpdateDisplay, 5000);
+
 
 /* ===== TURNAROUND RECAP UPDATE ===== */
 function updateTaRecap() {
