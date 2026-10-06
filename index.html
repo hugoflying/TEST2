@@ -95,6 +95,8 @@ a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-of
 
 
 .block{display:grid;gap:14px}
+.rank-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px}
+.sortbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
 .pricebar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 .pricebar-label{font-weight:600}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bg)}
@@ -152,7 +154,8 @@ tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
   .verdict{grid-template-columns:1fr}
   .pricebar{align-items:stretch}
   .seg{width:100%}
-  .seg button{flex:1}
+  .seg button{flex:1;padding-inline:8px}
+  .sortbar{width:100%}
 }
 @media (prefers-reduced-motion:reduce){.bar span{transition:none}}
 </style>
@@ -163,7 +166,7 @@ tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
   <header>
     <div class="eyebrow">Comparatif réfrigérateurs combinés · prix fabricant ou enseigne (Boulanger, Darty), hors marketplace · relevés le 6 octobre 2026</div>
     <h1>Combinés 70 cm et plus</h1>
-    <p class="lede">Huit modèles en pose libre, congélateur en bas, classés du meilleur au moins bon rapport qualité/prix. La note de qualité vient des fiches techniques (zone fraîcheur, consommation, silence, équipement, volume) ; elle est ensuite rapportée au prix.</p>
+    <p class="lede">Huit modèles en pose libre, congélateur en bas, classés par défaut du meilleur au moins bon rapport qualité/prix ; vous pouvez aussi les trier par qualité ou par prix. La note de qualité vient des fiches techniques (zone fraîcheur, consommation, silence, équipement, volume) ; elle est ensuite rapportée au prix.</p>
     <div class="criteria">
       <span class="crit">Hauteur ≥ 200 cm</span>
       <span class="crit">Largeur ≥ 70 cm</span>
@@ -182,7 +185,17 @@ tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
   </div>
 
   <section aria-labelledby="h-rank" class="block">
-    <h2 id="h-rank">Classement</h2>
+    <div class="rank-head">
+      <h2 id="h-rank">Classement</h2>
+      <div class="sortbar">
+        <span class="pricebar-label" id="sort-label">Trier par</span>
+        <div class="seg" role="radiogroup" aria-labelledby="sort-label" id="sortseg">
+          <button type="button" role="radio" data-sort="value" aria-checked="true">Rapport qualité/prix</button>
+          <button type="button" role="radio" data-sort="quality" aria-checked="false">Qualité</button>
+          <button type="button" role="radio" data-sort="price" aria-checked="false">Prix</button>
+        </div>
+      </div>
+    </div>
     <div class="ranking" id="ranking"></div>
   </section>
 
@@ -260,19 +273,23 @@ const fr = (n,d=0)=>n.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFra
 const byId = id=>MODELS.find(m=>m.id===id);
 
 let mode = "public";
+let sortMode = "value";
 let selected = new Set();
 
 function priceOf(m){ return mode==="employe" && m.priceEmp ? m.priceEmp : m.price; }
 function stockOf(m){ return mode==="employe" && m.stockEmp ? m.stockEmp : m.stock; }
 function shopOf(m){ return mode==="employe" && m.priceEmp ? "Site employé Bosch / Siemens" : m.shop; }
 function cost10(m){ return priceOf(m) + (m.kwh||0)*KWH_PRICE*10; }
-function quality(m){
-  const s = {
+function subs(m){
+  return {
     fresh:m.fs, energy:CLS[m.cls],
     silence:clamp(10-(m.db-29)*(8/6),0,10),
     volume:clamp(4+6*((m.fridge+m.freezer)-440)/46,0,10),
     equip:2+(m.duo?5:0)+(m.wifi?3:0)
   };
+}
+function quality(m){
+  const s = subs(m);
   let num=0, den=0; for(const k in WEIGHTS){ num+=s[k]*WEIGHTS[k]; den+=WEIGHTS[k]; }
   return num/den;
 }
@@ -307,13 +324,17 @@ function fridgeSVG(m){
 }
 
 function renderRanking(){
-  const list = ranked();
+  const byValue = ranked();
+  const bestId = byValue[0].m.id;
+  const list = byValue.slice();
+  if(sortMode==="quality") list.sort((a,b)=>b.q-a.q || priceOf(a.m)-priceOf(b.m));
+  if(sortMode==="price") list.sort((a,b)=>priceOf(a.m)-priceOf(b.m) || b.q-a.q);
   document.getElementById("ranking").innerHTML = list.map(({m,s,q},i)=>{
     const total=m.fridge+m.freezer;
     const kwh = `${m.kwhEst?"≈ ":""}${m.kwh} kWh/an`;
     const st = stockOf(m);
     const out = /rupture/i.test(st);
-    const badges = (i===0?`<span class="badge">Meilleur rapport qualité/prix</span>`:"") + `<span class="badge ${out?"warn":"ok"}">${st}</span>`;
+    const badges = (m.id===bestId?`<span class="badge">Meilleur rapport qualité/prix</span>`:"") + `<span class="badge ${out?"warn":"ok"}">${st}</span>`;
     const alt = m.priceEmp ? (mode==="employe" ? `Prix public : ${fr(m.price)} €` : `Site employé : ${fr(m.priceEmp)} €`) : "";
     const on = selected.has(m.id);
     return `<article class="card${i===0?" top":""}">
@@ -365,6 +386,11 @@ const ROWS = [
   ["Rang qualité/prix", m=>m._rank, m=>m._rank+"ᵉ", "min"],
   ["Qualité/prix", m=>m._s, m=>fr(m._s,1)+" / 10", "max"],
   ["Note de qualité", m=>m._q, m=>fr(m._q,1)+" / 10", "max"],
+  ["· dont zone fraîcheur", m=>subs(m).fresh, m=>fr(subs(m).fresh,1)+" / 10", "max"],
+  ["· dont consommation", m=>subs(m).energy, m=>fr(subs(m).energy,1)+" / 10", "max"],
+  ["· dont silence", m=>subs(m).silence, m=>fr(subs(m).silence,1)+" / 10", "max"],
+  ["· dont équipement", m=>subs(m).equip, m=>fr(subs(m).equip,1)+" / 10", "max"],
+  ["· dont volume", m=>subs(m).volume, m=>fr(subs(m).volume,1)+" / 10", "max"],
   ["Prix", m=>priceOf(m), m=>fr(priceOf(m))+" €", "min"],
   ["Coût sur 10 ans", m=>cost10(m), m=>fr(Math.round(cost10(m)/10)*10)+" €", "min"],
   ["Disponibilité", m=>null, m=>stockOf(m), null],
@@ -431,13 +457,19 @@ function toggle(id){
 }
 function renderAll(){ renderRanking(); renderPicker(); renderCompare(); }
 
-document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>{
+document.querySelectorAll(".pricebar .seg button").forEach(b=>b.addEventListener("click",()=>{
   mode = b.dataset.mode;
-  document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-checked",String(x===b)));
+  document.querySelectorAll(".pricebar .seg button").forEach(x=>x.setAttribute("aria-checked",String(x===b)));
   document.getElementById("pm-hint").textContent = mode==="employe"
     ? "Les Bosch et le Siemens KG49NAIBG passent au prix du site employé ; les autres gardent leur prix public."
     : "Le classement et le comparateur suivent ce choix.";
   renderAll();
+}));
+
+document.querySelectorAll("#sortseg button").forEach(b=>b.addEventListener("click",()=>{
+  sortMode = b.dataset.sort;
+  document.querySelectorAll("#sortseg button").forEach(x=>x.setAttribute("aria-checked",String(x===b)));
+  renderRanking();
 }));
 
 ranked().slice(0,3).forEach(x=>selected.add(x.m.id));
