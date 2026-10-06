@@ -163,7 +163,7 @@ tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
   <header>
     <div class="eyebrow">Comparatif réfrigérateurs combinés · prix fabricant ou enseigne (Boulanger, Darty), hors marketplace · relevés le 6 octobre 2026</div>
     <h1>Combinés 70 cm et plus</h1>
-    <p class="lede">Six modèles en pose libre, congélateur en bas, classés du meilleur au moins bon rapport qualité/prix. La note de qualité vient des fiches techniques (zone fraîcheur, consommation, silence, équipement, volume) ; elle est ensuite rapportée au prix.</p>
+    <p class="lede">Huit modèles en pose libre, congélateur en bas, classés du meilleur au moins bon rapport qualité/prix. La note de qualité vient des fiches techniques (zone fraîcheur, consommation, silence, équipement, volume) ; elle est ensuite rapportée au prix.</p>
     <div class="criteria">
       <span class="crit">Hauteur ≥ 200 cm</span>
       <span class="crit">Largeur ≥ 70 cm</span>
@@ -176,7 +176,7 @@ tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
     <span class="pricebar-label" id="pm-label">Prix utilisés</span>
     <div class="seg" role="radiogroup" aria-labelledby="pm-label">
       <button type="button" role="radio" id="pm-public" data-mode="public" aria-checked="true">Prix public</button>
-      <button type="button" role="radio" id="pm-employe" data-mode="employe" aria-checked="false">Prix employé Bosch</button>
+      <button type="button" role="radio" id="pm-employe" data-mode="employe" aria-checked="false">Prix employé Bosch / Siemens</button>
     </div>
     <span class="shop" id="pm-hint">Le classement et le comparateur suivent ce choix.</span>
   </div>
@@ -201,9 +201,9 @@ tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
     <p><strong>Consommation.</strong> Notée sur la classe énergétique (A = 10, B = 8, C = 6, D = 4).</p>
     <p><strong>Silence.</strong> 29 dB vaut 10, 35 dB vaut 2. <strong>Volume</strong> : de 440 L (4) à 486 L (10). <strong>Équipement</strong> : double circuit de froid (+5), wifi (+3), base 2.</p>
     <p><strong>Note de qualité.</strong> Moyenne pondérée des critères ci-dessus : zone fraîcheur 37,5 %, consommation 25 %, silence 19 %, équipement 12,5 %, volume 6 %. Le prix n'y entre pas.</p>
-    <p><strong>Rapport qualité/prix.</strong> Note de qualité divisée par le prix en milliers d'euros. Le meilleur rapport vaut 10, les autres sont exprimés par rapport à lui. En mode « Prix employé Bosch », les trois Bosch prennent leur prix employé ; les autres marques gardent leur prix public.</p>
+    <p><strong>Rapport qualité/prix.</strong> Note de qualité divisée par le prix en milliers d'euros. Le meilleur rapport vaut 10, les autres sont exprimés par rapport à lui. En mode « Prix employé Bosch / Siemens », les modèles dont le prix employé est connu (trois Bosch et le Siemens KG49NAIBG) le prennent ; les autres gardent leur prix public.</p>
     <p><strong>Coût sur 10 ans.</strong> Prix d'achat plus électricité sur 10 ans, à 0,28 € le kWh, d'après la consommation de l'étiquette énergie.</p>
-    <p><strong>Garanties.</strong> Tous les modèles ont la garantie légale de conformité de 2 ans. Liebherr ajoute 10 ans sur le compresseur pour un usage privé, à condition d'enregistrer l'appareil (numéro de série et preuve d'achat) sur son site. Bosch et Miele proposent des extensions après enregistrement ou contre paiement : vérifiez les conditions au moment de l'achat. La garantie n'entre pas dans le score.</p>
+    <p><strong>Garanties.</strong> Tous les modèles ont la garantie légale de conformité de 2 ans. Liebherr ajoute 10 ans sur le compresseur pour un usage privé, à condition d'enregistrer l'appareil (numéro de série et preuve d'achat) sur son site. Siemens offre 8 ans de garantie en plus des 2 ans sur ses combinés iQ500 et iQ700 achetés entre le 1er avril et le 31 décembre 2026. Bosch et Miele proposent des extensions après enregistrement ou contre paiement : vérifiez les conditions au moment de l'achat. La garantie n'entre pas dans le score.</p>
     <p><strong>Illustrations.</strong> Silhouettes dessinées à la même échelle à partir des dimensions réelles, pas des photos : suivez le lien de chaque modèle pour voir le produit.</p>
   </section>
 </div>
@@ -235,6 +235,16 @@ const MODELS = [
    fresh:"VitaFresh XXL 0 °C",fs:6,isZero:true,duo:false,wifi:false,doors:2,handle:"bar",rating:"4,4/5 (134 avis, Bosch)",
    pros:["Classe B, 142 kWh/an","Même meuble que les KGN492IAF et KGN497ICT","Le mieux noté en nombre d'avis"],
    cons:["35 dB, comme le KGN497ICT","En rupture, y compris sur le site employé"]},
+  {id:"siemensNAIBG",gar:"2 ans + 8 ans offerts",garNote:"Offre Siemens : 8 ans de garantie en plus des 2 ans pour les combinés iQ500 et iQ700 achetés du 1er avril au 31 décembre 2026",parts:"15 ans",brand:"Siemens",name:"KG49NAIBG iQ500",price:1133,priceEmp:979,shop:"Siemens.fr",stock:"En stock",url:"https://www.siemens-home.bsh-group.com/fr/fr/product/froid/refrigerateurs-et-congelateurs-pose-libre/refrigerateurs-congelateurs-combines-pose-libre/KG49NAIBG",
+   w:70,h:203,d:66.7,fridge:311,freezer:129,cls:"B",kwh:142,db:35,dbTxt:"35",
+   fresh:"hyperFresh 0 °C",fs:6,isZero:true,duo:false,wifi:false,doors:2,handle:"bar",rating:"4,7/5 (45 avis, Siemens)",
+   pros:["Jumeau du Bosch KGN49AIBT, mais en stock (979 € employé)","Garantie 10 ans avec l'offre Siemens 2026","Classe B, 142 kWh/an"],
+   cons:["35 dB","Tiroirs 0 °C sans régulation dédiée, pas de wifi"]},
+  {id:"siemensN4XAF",gar:"2 ans + 8 ans offerts",garNote:"Offre Siemens : 8 ans de garantie en plus des 2 ans pour les combinés iQ500 et iQ700 achetés du 1er avril au 31 décembre 2026",parts:"15 ans",brand:"Siemens",name:"KG49N4XAF iQ500",price:1749.99,shop:"Siemens.fr",stock:"En rupture",url:"https://www.siemens-home.bsh-group.com/fr/fr/product/froid/refrigerateurs-et-congelateurs-pose-libre/refrigerateurs-congelateurs-combines-pose-libre/KG49N4XAF",
+   w:70,h:203,d:66.7,fridge:311,freezer:129,cls:"A",kwh:122,kwhEst:true,db:29,dbTxt:"29",
+   fresh:"hyperFresh 0 °C",fs:6,isZero:true,duo:false,wifi:false,doors:2,handle:"bar",rating:"4,3/5 (21 avis, Siemens)",
+   pros:["Jumeau du Bosch KGN492IAF : 29 dB, classe A","Garantie 10 ans avec l'offre Siemens 2026","Porte noDistance, se colle au mur"],
+   cons:["160 € de plus que le Bosch équivalent","En rupture chez Siemens"]},
   {id:"bosch497",gar:"2 ans",garNote:"Extensions proposées via MyBosch après enregistrement",parts:"15 ans",brand:"Bosch",name:"KGN497ICT Série 4",price:1499.99,priceEmp:1019,shop:"Bosch.fr",stock:"En stock",stockEmp:"Disponible",url:"https://www.bosch-home.fr/fr/product/le-froid/refrigerateurs-combines/combines-avec-congelateurs-en-bas-pose-libre/KGN497ICT",
    w:70,h:203,d:66.7,fridge:311,freezer:129,cls:"C",kwh:178,db:35,dbTxt:"35",
    fresh:"VitaFresh XXL 0 °C",fs:6,isZero:true,duo:false,wifi:false,doors:2,handle:"bar",rating:"4,7/5 (76 avis, Bosch)",
@@ -254,7 +264,7 @@ let selected = new Set();
 
 function priceOf(m){ return mode==="employe" && m.priceEmp ? m.priceEmp : m.price; }
 function stockOf(m){ return mode==="employe" && m.stockEmp ? m.stockEmp : m.stock; }
-function shopOf(m){ return mode==="employe" && m.priceEmp ? "Site employé Bosch" : m.shop; }
+function shopOf(m){ return mode==="employe" && m.priceEmp ? "Site employé Bosch / Siemens" : m.shop; }
 function cost10(m){ return priceOf(m) + (m.kwh||0)*KWH_PRICE*10; }
 function quality(m){
   const s = {
@@ -269,7 +279,8 @@ function quality(m){
 function ranked(){
   const raw = MODELS.map(m=>{const q=quality(m); return {m,q,r:q/(priceOf(m)/1000)};});
   const rMax = Math.max(...raw.map(x=>x.r));
-  return raw.map(x=>({...x,s:10*x.r/rMax})).sort((a,b)=>b.s-a.s);
+  const out = m=>/rupture/i.test(stockOf(m))?1:0;
+  return raw.map(x=>({...x,s:10*x.r/rMax})).sort((a,b)=>(Math.abs(b.s-a.s)>1e-9 ? b.s-a.s : out(a.m)-out(b.m)));
 }
 
 /* Silhouette à l'échelle : 1 cm = 0.7 unité, même échelle pour tous */
@@ -424,7 +435,7 @@ document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",(
   mode = b.dataset.mode;
   document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-checked",String(x===b)));
   document.getElementById("pm-hint").textContent = mode==="employe"
-    ? "Les trois Bosch passent au prix du site employé ; Liebherr et Miele gardent leur prix public."
+    ? "Les Bosch et le Siemens KG49NAIBG passent au prix du site employé ; les autres gardent leur prix public."
     : "Le classement et le comparateur suivent ce choix.";
   renderAll();
 }));
