@@ -93,9 +93,35 @@ a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-of
   .rank{font-size:32px}
 }
 
+
+.block{display:grid;gap:14px}
+.pricebar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.pricebar-label{font-weight:600}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bg)}
+.seg button{font:inherit;font-size:14px;padding:7px 14px;border:0;background:transparent;color:var(--ink);cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-checked="true"]{background:var(--accent);color:var(--surface);font-weight:600}
+.badges{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.badge.ok{background:var(--fresh-soft);color:var(--fresh)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+.cmp-btn{font:inherit;font-size:13.5px;padding:5px 10px;border-radius:6px;border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer}
+.cmp-btn[aria-pressed="true"]{background:var(--accent);color:var(--surface)}
+.cmp-head{display:grid;gap:4px}
+.picker{display:flex;flex-wrap:wrap;gap:8px}
+.pick{display:flex;align-items:center;gap:8px;padding:7px 12px 7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);cursor:pointer;font-size:14px;line-height:1.2}
+.pick small{display:block;font-family:var(--font-data);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.pick.on{border-color:var(--accent);background:var(--accent-soft)}
+.pick input{accent-color:var(--accent);width:16px;height:16px;margin:0}
+.empty{margin:0;padding:18px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);text-align:center}
+#cmp-out{display:grid;gap:12px}
+.verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.fact{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.fact .k{font-family:var(--font-data);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fact .v{font-size:14.5px;font-variant-numeric:tabular-nums}
+.cmp-btn:focus-visible,.seg button:focus-visible,.pick:focus-within{outline:2px solid var(--accent);outline-offset:2px}
 /* Tableau */
 .tablebox{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
-table{border-collapse:collapse;width:100%;min-width:860px;font-size:13.5px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
 th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 thead th{font-family:var(--font-display);font-stretch:85%;font-size:15px;position:sticky;top:0;background:var(--surface)}
 thead th small{display:block;font-family:var(--font-data);font-size:11px;color:var(--muted);font-weight:400;font-stretch:100%}
@@ -106,18 +132,6 @@ tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
 .notes{display:grid;gap:8px;font-size:14px;color:var(--muted);max-width:80ch}
 .notes p{margin:0}
 .notes strong{color:var(--ink);font-weight:600}
-/* Fiches mobiles (remplacent le tableau sur téléphone) */
-.mspecs{display:none;gap:10px}
-.mspecs details{background:var(--surface);border:1px solid var(--line);border-radius:10px}
-.mspecs summary{cursor:pointer;padding:12px 14px;font-family:var(--font-display);font-stretch:85%;font-size:17px;font-weight:700;display:flex;justify-content:space-between;gap:10px;align-items:baseline;list-style:none}
-.mspecs summary::-webkit-details-marker{display:none}
-.mspecs summary small{font-family:var(--font-data);font-size:11px;color:var(--muted);font-weight:400;font-stretch:100%;display:block}
-.mspecs summary::after{content:"+";font-family:var(--font-data);color:var(--accent);font-size:18px}
-.mspecs details[open] summary::after{content:"–"}
-.mspecs dl{margin:0;padding:0 14px 12px;display:grid;grid-template-columns:minmax(0,42%) minmax(0,1fr);font-size:14px}
-.mspecs dt,.mspecs dd{margin:0;padding:7px 0;border-top:1px solid var(--line)}
-.mspecs dt{color:var(--muted);padding-right:10px}
-.mspecs dd.best{color:var(--fresh);font-weight:600}
 
 @media (max-width:600px){
   body{font-size:14.5px}
@@ -131,10 +145,14 @@ tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
   .side .price{grid-column:1}
   .side .shop{grid-column:1}
   .side .score{grid-column:2;grid-row:1 / span 2}
-  .side > div:nth-of-type(4),.side a{grid-column:1/-1}
+  .side .badges,.side .actions{grid-column:1/-1}
+  .side .badges{justify-content:flex-start}
+  .actions{justify-content:space-between}
   .pros{grid-template-columns:1fr}
-  .tablebox,.table-legend{display:none}
-  .mspecs{display:grid}
+  .verdict{grid-template-columns:1fr}
+  .pricebar{align-items:stretch}
+  .seg{width:100%}
+  .seg button{flex:1}
 }
 @media (prefers-reduced-motion:reduce){.bar span{transition:none}}
 </style>
@@ -143,36 +161,48 @@ tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
 <body>
 <div class="wrap">
   <header>
-    <div class="eyebrow">Comparatif réfrigérateurs combinés · prix relevés le 4 octobre 2026</div>
+    <div class="eyebrow">Comparatif réfrigérateurs combinés · prix fabricant ou enseigne (Boulanger, Darty), hors marketplace · relevés le 6 octobre 2026</div>
     <h1>Combinés 70 cm et plus</h1>
-    <p class="lede">Cinq modèles en pose libre, congélateur en bas, classés d'après leurs fiches techniques. Le score pondère zone fraîcheur (30 %), consommation (20 %), prix (20 %), silence (15 %), équipement (10 %) et volume (5 %).</p>
+    <p class="lede">Six modèles en pose libre, congélateur en bas, classés du meilleur au moins bon rapport qualité/prix. La note de qualité vient des fiches techniques (zone fraîcheur, consommation, silence, équipement, volume) ; elle est ensuite rapportée au prix.</p>
     <div class="criteria">
       <span class="crit">Hauteur ≥ 200 cm</span>
       <span class="crit">Largeur ≥ 70 cm</span>
       <span class="crit">No Frost</span>
-      <span class="crit">Référence : Liebherr CBNsda 775i</span>
+      <span class="crit">Classement : rapport qualité/prix</span>
     </div>
   </header>
 
+  <div class="pricebar">
+    <span class="pricebar-label" id="pm-label">Prix utilisés</span>
+    <div class="seg" role="radiogroup" aria-labelledby="pm-label">
+      <button type="button" role="radio" id="pm-public" data-mode="public" aria-checked="true">Prix public</button>
+      <button type="button" role="radio" id="pm-employe" data-mode="employe" aria-checked="false">Prix employé Bosch</button>
+    </div>
+    <span class="shop" id="pm-hint">Le classement et le comparateur suivent ce choix.</span>
+  </div>
 
-  <section aria-labelledby="h-rank" style="display:grid;gap:14px">
+  <section aria-labelledby="h-rank" class="block">
     <h2 id="h-rank">Classement</h2>
     <div class="ranking" id="ranking"></div>
   </section>
 
-  <section aria-labelledby="h-table" style="display:grid;gap:14px">
-    <h2 id="h-table">Fiches techniques</h2>
-    <div class="tablebox"><table id="specs"></table></div>
-    <div class="mspecs" id="mspecs"></div>
-    <p class="shop table-legend" style="margin:0">En vert : la meilleure valeur de la ligne.</p>
+  <section aria-labelledby="h-cmp" class="block" id="comparer">
+    <div class="cmp-head">
+      <h2 id="h-cmp">Comparer une sélection</h2>
+      <p class="shop" style="margin:0">Cochez au moins deux modèles, ici ou avec le bouton « Comparer » de chaque carte.</p>
+    </div>
+    <div class="picker" id="picker" role="group" aria-label="Modèles à comparer"></div>
+    <div id="cmp-out"></div>
   </section>
 
   <section class="notes" aria-labelledby="h-notes">
     <h2 id="h-notes" style="color:var(--ink)">Comment lire ce classement</h2>
     <p><strong>Zone fraîcheur.</strong> Note sur 10 selon la précision de la zone froide : BioFresh avec régulation dédiée (10), tiroirs 0 °C sans régulation séparée VitaFresh XXL (6), simples bacs à humidité sans 0 °C, DailyFresh et EasyFresh (3).</p>
-    <p><strong>Consommation.</strong> Notée sur la classe énergétique (A = 10, C = 6, D = 4).</p>
+    <p><strong>Consommation.</strong> Notée sur la classe énergétique (A = 10, B = 8, C = 6, D = 4).</p>
     <p><strong>Silence.</strong> 29 dB vaut 10, 35 dB vaut 2. <strong>Volume</strong> : de 440 L (4) à 486 L (10). <strong>Équipement</strong> : double circuit de froid (+5), wifi (+3), base 2.</p>
-    <p><strong>Prix.</strong> Le moins cher relevé vaut 10, le plus cher 1.</p>
+    <p><strong>Note de qualité.</strong> Moyenne pondérée des critères ci-dessus : zone fraîcheur 37,5 %, consommation 25 %, silence 19 %, équipement 12,5 %, volume 6 %. Le prix n'y entre pas.</p>
+    <p><strong>Rapport qualité/prix.</strong> Note de qualité divisée par le prix en milliers d'euros. Le meilleur rapport vaut 10, les autres sont exprimés par rapport à lui. En mode « Prix employé Bosch », les trois Bosch prennent leur prix employé ; les autres marques gardent leur prix public.</p>
+    <p><strong>Coût sur 10 ans.</strong> Prix d'achat plus électricité sur 10 ans, à 0,28 € le kWh, d'après la consommation de l'étiquette énergie.</p>
     <p><strong>Garanties.</strong> Tous les modèles ont la garantie légale de conformité de 2 ans. Liebherr ajoute 10 ans sur le compresseur pour un usage privé, à condition d'enregistrer l'appareil (numéro de série et preuve d'achat) sur son site. Bosch et Miele proposent des extensions après enregistrement ou contre paiement : vérifiez les conditions au moment de l'achat. La garantie n'entre pas dans le score.</p>
     <p><strong>Illustrations.</strong> Silhouettes dessinées à la même échelle à partir des dimensions réelles, pas des photos : suivez le lien de chaque modèle pour voir le produit.</p>
   </section>
@@ -180,84 +210,73 @@ tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
 
 <script>
 const MODELS = [
-  {id:"lieb775",gar:"2 ans + compresseur 10 ans",garNote:"Compresseur 10 ans si l'appareil est enregistré sur le site Liebherr",parts:"15 ans",brand:"Liebherr",name:"CBNsda 775i Prime BioFresh",price:2599,shop:"Boulanger",url:"https://www.boulanger.com/ref/1218026",
+  {id:"lieb775",gar:"2 ans + compresseur 10 ans",garNote:"Compresseur 10 ans si l'appareil est enregistré sur le site Liebherr",parts:"15 ans",brand:"Liebherr",name:"CBNsda 775i Prime BioFresh",price:2599,shop:"Boulanger",stock:"Disponible",url:"https://www.boulanger.com/ref/1218026",
    w:74.7,h:201.5,d:67.5,fridge:336,freezer:138,cls:"A",kwh:130,db:34,dbTxt:"33–34",
    fresh:"BioFresh 0 °C (127 L)",fs:10,isZero:true,duo:true,wifi:true,doors:2,handle:"groove",rating:"Aucun avis",
    pros:["Vraie zone 0 °C régulée, la plus grande","Classe A, 130 kWh/an","Double circuit de froid, wifi"],
    cons:["Le plus cher, de loin","74,7 cm : laisser un jeu latéral pour la porte"]},
-  {id:"miele",gar:"2 ans",garNote:"Extension payante possible chez Miele",parts:"n.c.",brand:"Miele",name:"KFN 4796 CD",price:1829,shop:"Miele.fr",url:"https://www.miele.fr/product/11954070/refrigerateur-congelateur-posable-kfn-4796-cd-inox-cleansteel",
+  {id:"miele",gar:"2 ans",garNote:"Extension payante possible chez Miele",parts:"n.c.",brand:"Miele",name:"KFN 4796 CD",price:1829,shop:"Miele.fr",stock:"Disponible",url:"https://www.miele.fr/product/11954070/refrigerateur-congelateur-posable-kfn-4796-cd-inox-cleansteel",
    w:74.7,h:201.5,d:67.5,fridge:348,freezer:138,cls:"C",kwh:185,db:34,dbTxt:"34",
    fresh:"DailyFresh (humidité, sans 0 °C)",fs:3,isZero:false,duo:true,wifi:true,doors:2,handle:"lever",rating:"4,9/5 (16 avis)",
    pros:["Très bien noté, porte SoftClose","Double circuit DuplexCool, wifi","Grand volume (486 L)"],
    cons:["Pas de zone 0 °C","Cher pour une classe C"]},
-  {id:"lieb7723",gar:"2 ans + compresseur 10 ans",garNote:"Compresseur 10 ans si l'appareil est enregistré sur le site Liebherr",parts:"15 ans",brand:"Liebherr",name:"CNsfa 7723-20",price:2099,shop:"Darty",url:"https://www.darty.com/nav/achat/gros_electromenager/refrigerateur-congelateur-refrigerateur-cong/refrigerateur-congelateur_bas/liebherr_cnsfa_7723-20.html",
+  {id:"lieb7723",gar:"2 ans + compresseur 10 ans",garNote:"Compresseur 10 ans si l'appareil est enregistré sur le site Liebherr",parts:"15 ans",brand:"Liebherr",name:"CNsfa 7723-20",price:2099,shop:"Darty",stock:"Disponible",url:"https://www.darty.com/nav/achat/gros_electromenager/refrigerateur-congelateur-refrigerateur-cong/refrigerateur-congelateur_bas/liebherr_cnsfa_7723-20.html",
    w:74.7,h:201.5,d:67.5,fridge:347,freezer:138,cls:"A",kwh:118,db:35,dbTxt:"35",
    fresh:"EasyFresh (humidité, sans 0 °C)",fs:3,isZero:false,duo:true,wifi:false,doors:2,handle:"bar",rating:"4,8/5 (5 avis, Darty)",
    pros:["Le plus sobre : classe A, 118 kWh/an","Double circuit DuoCooling, écran tactile","Grand volume (485 L)"],
    cons:["Pas de zone 0 °C","2 099 € sans BioFresh, 500 € sous le 775i"]},
-  {id:"bosch492",gar:"2 ans",garNote:"Extensions proposées via MyBosch après enregistrement",parts:"15 ans",brand:"Bosch",name:"KGN492IAF Série 4",price:1590,shop:"Bosch.fr, momentanément indisponible",url:"https://www.bosch-home.fr/fr/product/le-froid/refrigerateurs-combines/combines-avec-congelateurs-en-bas-pose-libre/KGN492IAF",
+  {id:"bosch492",gar:"2 ans",garNote:"Extensions proposées via MyBosch après enregistrement",parts:"15 ans",brand:"Bosch",name:"KGN492IAF Série 4",price:1590,priceEmp:1269,shop:"Bosch.fr",stock:"En rupture",stockEmp:"En rupture",url:"https://www.bosch-home.fr/fr/product/le-froid/refrigerateurs-combines/combines-avec-congelateurs-en-bas-pose-libre/KGN492IAF",
    w:70,h:203,d:66.7,fridge:311,freezer:129,cls:"A",kwh:122,kwhEst:true,db:29,dbTxt:"29",
    fresh:"VitaFresh XXL 0 °C",fs:6,isZero:true,duo:false,wifi:false,doors:2,handle:"bar",rating:"4,4/5 (27 avis)",
    pros:["Le plus silencieux (29 dB)","Classe A, environ 122 kWh/an","70 cm, se colle au mur (Perfect Fit)"],
-   cons:["Tiroirs 0 °C sans régulation dédiée","Indisponible chez Bosch au relevé"]},
-  {id:"bosch497",gar:"2 ans",garNote:"Extensions proposées via MyBosch après enregistrement",parts:"15 ans",brand:"Bosch",name:"KGN497ICT Série 4",price:1060,shop:"E.Leclerc",url:"https://www.e.leclerc/fp/refrigerateur-combine-70cm-440l-nofrost-inox-serie-4-kgn497ict-bosch-4242005291069",
+   cons:["Tiroirs 0 °C sans régulation dédiée","En rupture, y compris sur le site employé"]},
+  {id:"bosch49ai",gar:"2 ans",garNote:"Extensions proposées via MyBosch après enregistrement",parts:"15 ans",brand:"Bosch",name:"KGN49AIBT Série 6",price:1133,priceEmp:1069,shop:"Bosch.fr",stock:"En rupture",stockEmp:"En rupture",url:"https://www.bosch-home.fr/fr/product/le-froid/refrigerateurs-combines/combines-avec-congelateurs-en-bas-pose-libre/KGN49AIBT",
+   w:70,h:203,d:66.7,fridge:311,freezer:129,cls:"B",kwh:142,db:35,dbTxt:"35",
+   fresh:"VitaFresh XXL 0 °C",fs:6,isZero:true,duo:false,wifi:false,doors:2,handle:"bar",rating:"4,4/5 (134 avis, Bosch)",
+   pros:["Classe B, 142 kWh/an","Même meuble que les KGN492IAF et KGN497ICT","Le mieux noté en nombre d'avis"],
+   cons:["35 dB, comme le KGN497ICT","En rupture, y compris sur le site employé"]},
+  {id:"bosch497",gar:"2 ans",garNote:"Extensions proposées via MyBosch après enregistrement",parts:"15 ans",brand:"Bosch",name:"KGN497ICT Série 4",price:1499.99,priceEmp:1019,shop:"Bosch.fr",stock:"En stock",stockEmp:"Disponible",url:"https://www.bosch-home.fr/fr/product/le-froid/refrigerateurs-combines/combines-avec-congelateurs-en-bas-pose-libre/KGN497ICT",
    w:70,h:203,d:66.7,fridge:311,freezer:129,cls:"C",kwh:178,db:35,dbTxt:"35",
-   fresh:"VitaFresh XXL 0 °C",fs:6,isZero:true,duo:false,wifi:false,doors:2,handle:"bar",rating:"4,7/5 (E.Leclerc)",
-   pros:["Le moins cher avec une zone 0 °C","Même meuble que le KGN492IAF","Bien noté"],
+   fresh:"VitaFresh XXL 0 °C",fs:6,isZero:true,duo:false,wifi:false,doors:2,handle:"bar",rating:"4,7/5 (76 avis, Bosch)",
+   pros:["Disponible, le moins cher en prix employé","Même meuble que le KGN492IAF","Très bien noté (4,7/5)"],
    cons:["Classe C, 178 kWh/an","35 dB, pas de wifi"]}
 ];
 
-const CRITERIA = [
-  {k:"fresh",label:"Zone fraîcheur"},
-  {k:"energy",label:"Consommation"},
-  {k:"silence",label:"Silence"},
-  {k:"price",label:"Prix"},
-  {k:"volume",label:"Volume"},
-  {k:"equip",label:"Équipement"}
-];
-const PRESETS = {
-  equilibre:   {fresh:30,energy:20,silence:15,price:20,volume:5,equip:10},
-  conservation:{fresh:55,energy:10,silence:10,price:10,volume:5,equip:10},
-  budget:      {fresh:20,energy:15,silence:10,price:45,volume:5,equip:5},
-  silence:     {fresh:20,energy:15,silence:45,price:10,volume:5,equip:5},
-  eco:         {fresh:20,energy:45,silence:10,price:15,volume:5,equip:5}
-};
-let weights = {...PRESETS.equilibre};
-
+const WEIGHTS = {fresh:30,energy:20,silence:15,volume:5,equip:10};
 const CLS = {A:10,B:8,C:6,D:4,E:2};
-const prices = MODELS.filter(m=>m.price).map(m=>m.price);
-const pMin = Math.min(...prices), pMax = Math.max(...prices);
+const KWH_PRICE = 0.28;
 const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
-function sub(m){
-  const total = m.fridge+m.freezer;
-  return {
-    fresh:m.fs,
-    energy:CLS[m.cls],
+const fr = (n,d=0)=>n.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d});
+const byId = id=>MODELS.find(m=>m.id===id);
+
+let mode = "public";
+let selected = new Set();
+
+function priceOf(m){ return mode==="employe" && m.priceEmp ? m.priceEmp : m.price; }
+function stockOf(m){ return mode==="employe" && m.stockEmp ? m.stockEmp : m.stock; }
+function shopOf(m){ return mode==="employe" && m.priceEmp ? "Site employé Bosch" : m.shop; }
+function cost10(m){ return priceOf(m) + (m.kwh||0)*KWH_PRICE*10; }
+function quality(m){
+  const s = {
+    fresh:m.fs, energy:CLS[m.cls],
     silence:clamp(10-(m.db-29)*(8/6),0,10),
-    price:m.price==null?null:1+9*(pMax-m.price)/(pMax-pMin),
-    volume:clamp(4+6*(total-440)/46,0,10),
+    volume:clamp(4+6*((m.fridge+m.freezer)-440)/46,0,10),
     equip:2+(m.duo?5:0)+(m.wifi?3:0)
   };
+  let num=0, den=0; for(const k in WEIGHTS){ num+=s[k]*WEIGHTS[k]; den+=WEIGHTS[k]; }
+  return num/den;
 }
-function score(m){
-  const s=sub(m); let num=0, den=0;
-  for(const c of CRITERIA){ if(s[c.k]==null) continue; num+=s[c.k]*weights[c.k]; den+=weights[c.k]; }
-  return den?num/den:0;
+function ranked(){
+  const raw = MODELS.map(m=>{const q=quality(m); return {m,q,r:q/(priceOf(m)/1000)};});
+  const rMax = Math.max(...raw.map(x=>x.r));
+  return raw.map(x=>({...x,s:10*x.r/rMax})).sort((a,b)=>b.s-a.s);
 }
-const fr = (n,d=0)=>n.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d});
 
 /* Silhouette à l'échelle : 1 cm = 0.7 unité, même échelle pour tous */
 function fridgeSVG(m){
   const k=.7, W=m.w*k, H=m.h*k, maxH=203*k, pad=2;
-  const y0 = maxH-H;
-  const split = y0 + H*0.66;
-  const gid = "g"+m.id;
-  let doors = "";
-  doors += `<line x1="${pad}" y1="${split}" x2="${W-pad}" y2="${split}" stroke="var(--steel-edge)" stroke-width="1"/>`;
-  if(m.doors===3){
-    const s2 = split + (maxH-split)/2;
-    doors += `<line x1="${pad}" y1="${s2}" x2="${W-pad}" y2="${s2}" stroke="var(--steel-edge)" stroke-width="1"/>`;
-  }
+  const y0 = maxH-H, split = y0 + H*0.66, gid = "g"+m.id;
+  let doors = `<line x1="${pad}" y1="${split}" x2="${W-pad}" y2="${split}" stroke="var(--steel-edge)" stroke-width="1"/>`;
   let handles = "";
   if(m.handle==="bar"){
     handles += `<rect x="${W-7}" y="${split-38}" width="2.6" height="30" rx="1.3" fill="var(--steel-edge)"/>`;
@@ -269,21 +288,23 @@ function fridgeSVG(m){
     handles += `<line x1="${W-4}" y1="${y0+10}" x2="${W-4}" y2="${split-4}" stroke="var(--steel-edge)" stroke-width="1.2" opacity=".8"/>`;
   }
   const zero = m.isZero ? `<rect x="${pad+4}" y="${split-14}" width="${W-2*pad-8}" height="9" rx="1.5" fill="var(--fresh)" opacity=".85"/>` : "";
-  return `<svg viewBox="-1 -1 ${55} ${maxH+2}" role="img" aria-label="Silhouette ${m.brand} ${m.name}, ${fr(m.w,1)} × ${fr(m.h,1)} cm">
+  return `<svg viewBox="-1 -1 55 ${maxH+2}" role="img" aria-label="Silhouette ${m.brand} ${m.name}, ${fr(m.w,1)} × ${fr(m.h,1)} cm">
     <defs><linearGradient id="${gid}" x1="0" x2="1"><stop offset="0" stop-color="var(--steel-a)"/><stop offset="1" stop-color="var(--steel-b)"/></linearGradient></defs>
     <rect x="0" y="${y0}" width="${W}" height="${H}" rx="2" fill="url(#${gid})" stroke="var(--steel-edge)" stroke-width="1"/>
     ${doors}${handles}${zero}
   </svg>`;
 }
 
-
 function renderRanking(){
-  const list = MODELS.map(m=>({m,s:score(m)})).sort((a,b)=>b.s-a.s);
-  document.getElementById("ranking").innerHTML = list.map(({m,s},i)=>{
+  const list = ranked();
+  document.getElementById("ranking").innerHTML = list.map(({m,s,q},i)=>{
     const total=m.fridge+m.freezer;
-    const kwh = m.kwh==null ? "kWh n.c." : `${m.kwhEst?"≈ ":""}${m.kwh} kWh/an`;
-    const ref = m.id==="lieb775" ? `<span class="badge">Modèle de référence</span>` : "";
-    const noPrice = m.price==null ? `<span class="badge warn">Prix exclu du score</span>` : "";
+    const kwh = `${m.kwhEst?"≈ ":""}${m.kwh} kWh/an`;
+    const st = stockOf(m);
+    const out = /rupture/i.test(st);
+    const badges = (i===0?`<span class="badge">Meilleur rapport qualité/prix</span>`:"") + `<span class="badge ${out?"warn":"ok"}">${st}</span>`;
+    const alt = m.priceEmp ? (mode==="employe" ? `Prix public : ${fr(m.price)} €` : `Site employé : ${fr(m.priceEmp)} €`) : "";
+    const on = selected.has(m.id);
     return `<article class="card${i===0?" top":""}">
       <div class="rank num">${i+1}</div>
       <div class="fridge">${fridgeSVG(m)}</div>
@@ -303,50 +324,113 @@ function renderRanking(){
         <ul class="pros">${m.pros.map(p=>`<li class="p">${p}</li>`).join("")}${m.cons.map(p=>`<li class="m">${p}</li>`).join("")}</ul>
       </div>
       <div class="side">
-        ${m.price==null?`<div class="price na">Prix non relevé</div>`:`<div class="price num">${fr(m.price)} €</div>`}
-        <div class="shop">${m.price==null?"":m.shop}</div>
-        <div class="score"><div class="val num">Score ${fr(s,1)} / 10</div><div class="bar"><span style="width:${s*10}%"></span></div></div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:inherit">${ref}${noPrice}</div>
-        <a href="${m.url}" target="_blank" rel="noopener">Voir la fiche</a>
+        <div class="price num">${fr(priceOf(m))} €</div>
+        <div class="shop">${shopOf(m)}${alt?`<br><span class="num">${alt}</span>`:""}</div>
+        <div class="score"><div class="val num">Qualité/prix ${fr(s,1)} / 10</div><div class="shop num">Qualité ${fr(q,1)} / 10</div><div class="bar"><span style="width:${s*10}%"></span></div></div>
+        <div class="badges">${badges}</div>
+        <div class="actions">
+          <button type="button" class="cmp-btn" data-id="${m.id}" aria-pressed="${on}">${on?"✓ Dans la comparaison":"Comparer"}</button>
+          <a href="${m.url}" target="_blank" rel="noopener">Voir la fiche</a>
+        </div>
       </div>
     </article>`;
   }).join("");
+  document.querySelectorAll(".cmp-btn").forEach(b=>b.addEventListener("click",()=>toggle(b.dataset.id)));
 }
 
-function renderTable(){
-  const rows = [
-    ["Prix", m=>m.price, m=>m.price==null?"n.c.":fr(m.price)+" €","min"],
-    ["Largeur", m=>m.w, m=>fr(m.w,1)+" cm",null],
-    ["Hauteur", m=>m.h, m=>fr(m.h,1)+" cm",null],
-    ["Profondeur", m=>m.d, m=>fr(m.d,1)+" cm",null],
-    ["Réfrigérateur", m=>m.fridge, m=>m.fridge+" L","max"],
-    ["Congélateur", m=>m.freezer, m=>m.freezer+" L","max"],
-    ["Volume total", m=>m.fridge+m.freezer, m=>(m.fridge+m.freezer)+" L","max"],
-    ["Classe énergie", m=>CLS[m.cls], m=>m.cls,"max"],
-    ["Consommation", m=>m.kwh, m=>m.kwh==null?"n.c.":(m.kwhEst?"≈ ":"")+m.kwh+" kWh/an","min"],
-    ["Bruit", m=>m.db, m=>m.dbTxt+" dB","min"],
-    ["Zone fraîcheur", m=>m.fs, m=>m.fresh,"max"],
-    ["Double circuit de froid", m=>m.duo?1:0, m=>m.duo?"Oui":"Non",null],
-    ["Wifi", m=>m.wifi?1:0, m=>m.wifi?"Oui":"Non",null],
-    ["Garantie", m=>null, m=>m.gar,null],
-    ["Conditions garantie", m=>null, m=>m.garNote,null],
-    ["Pièces détachées", m=>null, m=>m.parts,null],
-    ["Avis clients", m=>null, m=>m.rating,null]
-  ];
-  const head = `<thead><tr><th scope="col"></th>${MODELS.map(m=>`<th scope="col"><small>${m.brand}</small>${m.name}</th>`).join("")}</tr></thead>`;
-  const body = rows.map(([lab,get,txt,best])=>{
-    let target=null;
-    if(best){ const vals=MODELS.map(get).filter(v=>v!=null); target = best==="min"?Math.min(...vals):Math.max(...vals); }
-    return `<tr><th scope="row">${lab}</th>${MODELS.map(m=>{const v=get(m);return `<td class="num${best&&v===target?" best":""}">${txt(m)}</td>`}).join("")}</tr>`;
+function renderPicker(){
+  const order = ranked().map(x=>x.m);
+  document.getElementById("picker").innerHTML = order.map(m=>{
+    const on = selected.has(m.id);
+    return `<label class="pick${on?" on":""}" for="pk-${m.id}">
+      <input type="checkbox" id="pk-${m.id}" data-id="${m.id}" ${on?"checked":""}>
+      <span><small>${m.brand}</small>${m.name.replace(/ (Série|Prime).*/,"")}</span>
+    </label>`;
   }).join("");
-  document.getElementById("specs").innerHTML = head+"<tbody>"+body+"</tbody>";
-  const targets = rows.map(([lab,get,txt,best])=>{ if(!best) return null; const vals=MODELS.map(get).filter(v=>v!=null); return best==="min"?Math.min(...vals):Math.max(...vals); });
-  document.getElementById("mspecs").innerHTML = MODELS.map(m=>`<details><summary><span><small>${m.brand}</small>${m.name}</span></summary><dl>${
-    rows.map(([lab,get,txt,best],i)=>`<dt>${lab}</dt><dd class="num${best&&get(m)===targets[i]?" best":""}">${txt(m)}</dd>`).join("")
-  }</dl></details>`).join("");
+  document.querySelectorAll("#picker input").forEach(c=>c.addEventListener("change",()=>toggle(c.dataset.id)));
 }
 
-renderRanking(); renderTable();
+const ROWS = [
+  ["Rang qualité/prix", m=>m._rank, m=>m._rank+"ᵉ", "min"],
+  ["Qualité/prix", m=>m._s, m=>fr(m._s,1)+" / 10", "max"],
+  ["Note de qualité", m=>m._q, m=>fr(m._q,1)+" / 10", "max"],
+  ["Prix", m=>priceOf(m), m=>fr(priceOf(m))+" €", "min"],
+  ["Coût sur 10 ans", m=>cost10(m), m=>fr(Math.round(cost10(m)/10)*10)+" €", "min"],
+  ["Disponibilité", m=>null, m=>stockOf(m), null],
+  ["Dimensions (L × H × P)", m=>null, m=>`${fr(m.w,1)} × ${fr(m.h,1)} × ${fr(m.d,1)} cm`, null],
+  ["Réfrigérateur", m=>m.fridge, m=>m.fridge+" L", "max"],
+  ["Congélateur", m=>m.freezer, m=>m.freezer+" L", "max"],
+  ["Volume total", m=>m.fridge+m.freezer, m=>(m.fridge+m.freezer)+" L", "max"],
+  ["Classe énergie", m=>CLS[m.cls], m=>m.cls, "max"],
+  ["Consommation", m=>m.kwh, m=>(m.kwhEst?"≈ ":"")+m.kwh+" kWh/an", "min"],
+  ["Électricité / an", m=>m.kwh*KWH_PRICE, m=>fr(m.kwh*KWH_PRICE)+" €", "min"],
+  ["Bruit", m=>m.db, m=>m.dbTxt+" dB", "min"],
+  ["Zone fraîcheur", m=>m.fs, m=>m.fresh, "max"],
+  ["Double circuit de froid", m=>m.duo?1:0, m=>m.duo?"Oui":"Non", "max"],
+  ["Wifi", m=>m.wifi?1:0, m=>m.wifi?"Oui":"Non", "max"],
+  ["Garantie", m=>null, m=>m.gar, null],
+  ["Conditions garantie", m=>null, m=>m.garNote, null],
+  ["Pièces détachées", m=>null, m=>m.parts, null],
+  ["Avis clients", m=>null, m=>m.rating, null]
+];
+
+function short(m){ return `${m.brand} ${m.name.split(" ")[0]}`; }
+
+function renderCompare(){
+  const out = document.getElementById("cmp-out");
+  const rk = ranked();
+  const ms = rk.filter(x=>selected.has(x.m.id)).map((x)=>Object.assign(x.m,{_rank:rk.indexOf(x)+1,_s:x.s,_q:x.q}));
+  if(ms.length<2){
+    out.innerHTML = `<p class="empty">Sélectionnez au moins deux modèles pour les comparer.</p>`;
+    return;
+  }
+  const pick = (get,dir)=>{ const vals=ms.map(get); const t = dir==="min"?Math.min(...vals):Math.max(...vals); return {t, who:ms.filter(m=>get(m)===t)}; };
+  const names = arr=>arr.map(short).join(" et ");
+  const cheap = pick(priceOf,"min"), dear = pick(priceOf,"max");
+  const c10 = pick(cost10,"min");
+  const eco = pick(m=>m.kwh,"min"), hog = pick(m=>m.kwh,"max");
+  const quiet = pick(m=>m.db,"min");
+  const fresh = pick(m=>m.fs,"max");
+  const vol = pick(m=>m.fridge+m.freezer,"max");
+  const best = ms[0];
+  const facts = [
+    ["Meilleur rapport qualité/prix", `${short(best)} (${fr(best._s,1)} / 10)`],
+    ["Le moins cher", `${names(cheap.who)}, ${fr(cheap.t)} €${dear.t>cheap.t?` (${fr(dear.t-cheap.t)} € de moins que le plus cher)`:""}`],
+    ["Le moins cher sur 10 ans", `${names(c10.who)}, environ ${fr(Math.round(c10.t/10)*10)} € électricité comprise`],
+    ["Le plus sobre", `${names(eco.who)}, ${eco.t} kWh/an${hog.t>eco.t?` (${fr((hog.t-eco.t)*KWH_PRICE)} € par an de moins que le plus gourmand)`:""}`],
+    ["Le plus silencieux", `${names(quiet.who)}, ${quiet.who[0].dbTxt} dB`],
+    ["Meilleure zone fraîcheur", `${names(fresh.who)} : ${fresh.who[0].fresh}`],
+    ["Le plus grand", `${names(vol.who)}, ${vol.t} L`]
+  ];
+  const head = `<thead><tr><th scope="col"></th>${ms.map(m=>`<th scope="col"><small>${m.brand}</small>${m.name}</th>`).join("")}</tr></thead>`;
+  const body = ROWS.map(([lab,get,txt,dir])=>{
+    let t=null, same=false;
+    if(dir){ const vals=ms.map(get); t = dir==="min"?Math.min(...vals):Math.max(...vals); same = vals.every(v=>v===vals[0]); }
+    return `<tr><th scope="row">${lab}</th>${ms.map(m=>`<td class="num${dir&&!same&&get(m)===t?" best":""}">${txt(m)}</td>`).join("")}</tr>`;
+  }).join("");
+  out.innerHTML = `
+    <div class="verdict">${facts.map(([k,v])=>`<div class="fact"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("")}</div>
+    <div class="tablebox"><table style="min-width:${150+170*ms.length}px">${head}<tbody>${body}</tbody></table></div>
+    <p class="shop" style="margin:0">En vert : la meilleure valeur de la ligne parmi les modèles sélectionnés.</p>`;
+}
+
+function toggle(id){
+  selected.has(id) ? selected.delete(id) : selected.add(id);
+  renderAll();
+}
+function renderAll(){ renderRanking(); renderPicker(); renderCompare(); }
+
+document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>{
+  mode = b.dataset.mode;
+  document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-checked",String(x===b)));
+  document.getElementById("pm-hint").textContent = mode==="employe"
+    ? "Les trois Bosch passent au prix du site employé ; Liebherr et Miele gardent leur prix public."
+    : "Le classement et le comparateur suivent ce choix.";
+  renderAll();
+}));
+
+ranked().slice(0,3).forEach(x=>selected.add(x.m.id));
+renderAll();
 </script>
 </body>
 </html>
